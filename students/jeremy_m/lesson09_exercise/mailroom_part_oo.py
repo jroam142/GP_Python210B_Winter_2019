@@ -6,6 +6,7 @@
 import os
 import pathlib
 import time
+from donor_models import Donor, DonorCollection
 
 donors = {'Charlize Theron': [134000],
           'Charlie Boorman': [15, 5],
@@ -13,6 +14,7 @@ donors = {'Charlize Theron': [134000],
           'Nike': [22000],
           'Count Chocula': [1257633, 2532790]
           }
+
 
 # donor_totals = {}
 
@@ -74,7 +76,7 @@ def send_a_thank_you():
     clear_screen()
 
     donor_name_input, donation_amount = send_a_thank_you_inputs()
-    add_donor(donor_name_input, donation_amount)
+    don_col.add_donor(donor_name_input, donation_amount)
 
     clear_screen()
     print_thank_you_message(donor_name_input)
@@ -112,52 +114,52 @@ def print_thank_you_message(donor_name_input):
                                                donor_name_input, '$', int(donors[donor_name_input][-1])))
 
 
-def add_donor(donor_name_input, donation_amount):
-    """ Adds a donor and their donation to the donors dict.
-        Called in send_a_thank_you()
-    """
-    if donor_name_input in donors.keys():
-        donors[donor_name_input].append(donation_amount)
-    else:
-        donors[donor_name_input] = [donation_amount]
+# def add_donor(donor_name_input, donation_amount):
+#     """ Adds a donor and their donation to the donors dict.
+#         Called in send_a_thank_you()
+#     """
+#     if donor_name_input in donors.keys():
+#         donors[donor_name_input].append(donation_amount)
+#     else:
+#         donors[donor_name_input] = [donation_amount]
 
 
-def create_a_report():
-    """ Prints a formatted report showing donor name, total donations, number of
-        donations, and average donation amount. """
-    clear_screen()
+# def create_a_report():
+#     """ Prints a formatted report showing donor name, total donations, number of
+#         donations, and average donation amount. """
+#     clear_screen()
 
-    sorted_donor_sums = sum_donors_donations()
+#     sorted_donor_sums = sum_donors_donations()
 
-    print_report(sorted_donor_sums)
-
-
-def sum_donors_donations():
-    """ Returns a dict sorted by values. The values are the sums of a donors 
-        donations
-    """
-    donor_sums = {donor: sum(donations)
-                  for donor, donations in donors.items()}
-
-    sorted_by_values = sorted((value, key)
-                              for (key, value) in donor_sums.items())
-
-    return sorted_by_values    
+#     print_report(sorted_donor_sums)
 
 
-def print_report(sorted_donor_totals):
-    """ Prints a formatted report showing info for each donor in order from
-        highest total donations to least.
-    """
-    # This prints the top of the table
-    print("{:25} | {:12} | {:<19} | {:<16}".format(
-        'Name', 'Total Given', 'Number of Donations', 'Average Donation'))
-    print('-' * 81)
+# def sum_donors_donations():
+#     """ Returns a dict sorted by values. The values are the sums of a donors
+#         donations
+#     """
+#     donor_sums = {donor: sum(donations)
+#                   for donor, donations in donors.items()}
 
-    for total_donor in sorted_donor_totals[::-1]:
-        print('{:25} | ${:<11,} | {:^19} | ${:<16,}'.format(
-            total_donor[1], total_donor[0], len(donors[total_donor[1]]), (total_donor[0] / len(donors[total_donor[1]]))))
-    print('\n\n')
+#     sorted_by_values = sorted((value, key)
+#                               for (key, value) in donor_sums.items())
+
+#     return sorted_by_values
+
+
+# def print_report(sorted_donor_totals):
+#     """ Prints a formatted report showing info for each donor in order from
+#         highest total donations to least.
+#     """
+#     # This prints the top of the table
+#     print("{:25} | {:12} | {:<19} | {:<16}".format(
+#         'Name', 'Total Given', 'Number of Donations', 'Average Donation'))
+#     print('-' * 81)
+
+#     for total_donor in sorted_donor_totals[::-1]:
+#         print('{:25} | ${:<11,} | {:^19} | ${:<16,}'.format(
+#             total_donor[1], total_donor[0], len(donors[total_donor[1]]), (total_donor[0] / len(donors[total_donor[1]]))))
+#     print('\n\n')
 
 
 def get_user_input(msg):
@@ -170,12 +172,20 @@ def clear_screen():
     os.system('cls') if os.name == 'nt' else os.system('clear')
 
 
+don_col = DonorCollection()
+
 main_menu_answers = {'1': send_a_thank_you,
-                     '2': create_a_report, '3': letters_for_all}
+                         '2': don_col.generate_report, '3': letters_for_all}
 
 if __name__ == "__main__":
     clear_screen()
 
+    for donor, donations in donors.items():
+        don_col.add_donor(donor, donations[0])
+        # if len(donations) > 1:
+        #     for donation in donations[1:]:
+        #         don_col.donors[donor].add_donation(donation)
+    
     # Continue getting input until user types quit
     while user_input.lower() != 'quit':
         user_input = get_user_input(messages['start'])
