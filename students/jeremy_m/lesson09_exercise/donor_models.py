@@ -34,7 +34,7 @@ class DonorCollection():
         Called in send_a_thank_you()
         """
         if donor_name in self.donors:
-            self.donors[donor_name].append(donation)
+            self.donors[donor_name].donations.append(donation)
         else:
             new_donor = Donor(donor_name, donation)
             self.donors[donor_name] = new_donor
