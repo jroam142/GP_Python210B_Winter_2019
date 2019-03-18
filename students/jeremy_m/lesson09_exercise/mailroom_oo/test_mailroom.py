@@ -34,14 +34,14 @@ def test_sum_donors_donations():
 
 def test_get_donor_filename():
     """ Checks to make sure donor filenames are generated as expected """
-    test_filename = mp.get_donor_filename("Seat Cushion")
+    test_filename = mp.donor_letters.get_donor_filename("Seat Cushion")
     assert test_filename == 'Seat_Cushion.txt'
 
 
 def test_get_letter_text():
     """ Checks to see if 'letter_text' from get_letter_text is accurate """
     mp.don_col.add_donor('Sean Hannity', 400)
-    test_letter_text = mp.get_letter_text('Sean Hannity')
+    test_letter_text = mp.donor_letters.get_letter_text('Sean Hannity')
     correct_letter_text = ("{:^41}\n"
                            "Thank you so much for your generous donation of:\n"
                            "{:>21}{:,}\n"
@@ -54,8 +54,8 @@ def test_letters_for_all():
         was created for each donor
     """
     if not os.path.isdir('letters'):
-        mp.letters_for_all()
+        mp.donor_letters.letters_for_all()
     assert os.path.isdir('letters')
     for donor in mp.don_col.donors:
-        donor_filename = mp.get_donor_filename(donor)
+        donor_filename = mp.donor_letters.get_donor_filename(donor)
         assert os.path.isfile('./letters/{}'.format(donor_filename))

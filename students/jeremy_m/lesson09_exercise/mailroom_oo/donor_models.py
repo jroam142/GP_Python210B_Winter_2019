@@ -1,3 +1,8 @@
+""" 
+This module contains the classes that handle all the donor data for
+mailroom_oo.
+"""
+
 import os
 
 def clear_screen():
